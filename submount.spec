@@ -16,7 +16,7 @@ Source0:	http://dl.sourceforge.net/submount/%{name}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
 URL:		http://submount.sourceforge.net/
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
-BuildRequires:	rpmbuild(macros) >= 1.213
+BuildRequires:	rpmbuild(macros) >= 1.217
 Requires:	submount(kernel)
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -25,18 +25,20 @@ Submount is a system for automatically mounting and unmounting
 removable media drives like cdroms and floppy disk drives. It works
 with the Linux 2.6 kernel series. Once installed, it allows removable
 media drives to be accessed as if they were permanently mounted.
+In the opposite to supermount doesn't require patching the kernel.
 
 %description -l pl
-Submount jest systemem automatycznego montowanie i odmontowania
-wymiennych no¶ników danych, takich jak cdromy, dyskietki. Pracuje on
-z kernelem Linuksa serio 2.6. Raz zainstalowany umo¿liwia wyj±c 
-no¶nik danych, je¶li jest on zamontowany.
+Submount jest systemem automatycznego montowania i odmontowywania
+wymiennych no¶ników danych, takich jak cdromy czy dyskietki. Dzia³a
+z j±drami serii 2.6. Raz zainstalowany, umo¿liwia dostêp do wymiennych 
+no¶ników danych jakby by³y one trwale montowane.
+W przeciwieñstwie do supermount nie wymaga ³atania j±dra.
 
 %package -n kernel-misc-submount
 Summary:	Submount - kernel module
 Summary(pl):	Submount - modu³y kernela
 Release:	%{_rel}@%{_kernel_ver_str}
-License:	GPL
+License:	GPL v2
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
@@ -52,7 +54,7 @@ Submount - modu³y kernela
 Summary:	Submount - smp-kernel module
 Summary(pl):	Submount - modu³y kernela smp
 Release:	%{_rel}@%{_kernel_ver_str}
-License:	GPL
+License:	GPL v2
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
