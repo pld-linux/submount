@@ -5,6 +5,7 @@
 %bcond_with	verbose		# verbose build (V=1)
 #
 Summary:	Automatically mounts and unmounts removable media devices
+Summary(pl):	Automatycznie montuje i odmontowuje wymienne no郾iki danych
 Name:		submount
 Version:	0.9
 %define		_rel	1
@@ -25,8 +26,15 @@ removable media drives like cdroms and floppy disk drives. It works
 with the Linux 2.6 kernel series. Once installed, it allows removable
 media drives to be accessed as if they were permanently mounted.
 
+%description -l pl
+Submount jest systemem automatycznego montowanie i odmontowania
+wymiennych no郾ik闚 danych, takich jak cdromy, dyskietki. Pracuje on
+z kernelem Linuksa serio 2.6. Raz zainstalowany umo磧iwia wyj帷 
+no郾ik danych, je郵i jest on zamontowany.
+
 %package -n kernel-misc-submount
-Summary:	Submount kernel module
+Summary:	Submount - kernel module
+Summary(pl):	Submount - modu造 kernela
 Release:	%{_rel}@%{_kernel_ver_str}
 License:	GPL
 Group:		Base/Kernel
@@ -35,10 +43,14 @@ Requires(post,postun):	/sbin/depmod
 Provides:	submount(kernel)
 
 %description -n kernel-misc-submount
-Submount kernel module.
+Submount -  kernel module.
+
+%description -n kernel-misc-submount -l pl
+Submount - modu造 kernela
 
 %package -n kernel-smp-misc-submount
-Summary:	Submount kernel module
+Summary:	Submount - smp-kernel module
+Summary(pl):	Submount - modu造 kernela smp
 Release:	%{_rel}@%{_kernel_ver_str}
 License:	GPL
 Group:		Base/Kernel
@@ -47,7 +59,10 @@ Requires(post,postun):	/sbin/depmod
 Provides:	submount(kernel)
 
 %description -n kernel-smp-misc-submount
-Submount kernel module.
+Submount - smp-kernel module.
+
+%description -n kernel-smp-misc-submount -l pl
+Submount - modu造 kernela smp.
 
 %prep
 %setup -q
