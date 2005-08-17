@@ -1,11 +1,13 @@
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
+%bcond_without	kernel		# don't build kernel modules
 %bcond_without	smp		# don't build SMP module
+%bcond_without	userspace	# don't build userspace utilities
 %bcond_with	verbose		# verbose build (V=1)
 #
 Summary:	Automatically mounts and unmounts removable media devices
-Summary(pl):	Automatycznie montuje i odmontowuje wymienne no¶niki danych
+Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		submount
 Version:	0.9
 %define		_rel	1
@@ -29,47 +31,46 @@ In the opposite to supermount doesn't require patching the kernel.
 
 %description -l pl
 Submount jest systemem automatycznego montowania i odmontowywania
-wymiennych no¶ników danych, takich jak cdromy czy dyskietki. Dzia³a
-z j±drami serii 2.6. Raz zainstalowany, umo¿liwia dostêp do wymiennych 
-no¶ników danych jakby by³y one trwale montowane.
-W przeciwieñstwie do supermount nie wymaga ³atania j±dra.
+wymiennych no¶ników danych, takich jak p³yty CD-ROM czy dyskietki.
+Dzia³a z j±drami serii 2.6. Raz zainstalowany, umo¿liwia dostêp do
+wymiennych no¶ników danych tak, jakby by³y one trwale montowane. W
+przeciwieñstwie do supermount nie wymaga ³atania j±dra.
 
 %package -n kernel-misc-submount
 Summary:	Submount - kernel module
-Summary(pl):	Submount - modu³y kernela
+Summary(pl):	Submount - modu³ j±dra
 Release:	%{_rel}@%{_kernel_ver_str}
-License:	GPL v2
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
 Provides:	submount(kernel)
 
 %description -n kernel-misc-submount
-Submount -  kernel module.
+Submount - kernel module.
 
 %description -n kernel-misc-submount -l pl
-Submount - modu³y kernela
+Submount - modu³ j±dra.
 
 %package -n kernel-smp-misc-submount
-Summary:	Submount - smp-kernel module
-Summary(pl):	Submount - modu³y kernela smp
+Summary:	Submount - SMP kernel module
+Summary(pl):	Submount - modu³ j±dra SMP
 Release:	%{_rel}@%{_kernel_ver_str}
-License:	GPL v2
 Group:		Base/Kernel
 %{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
 Provides:	submount(kernel)
 
 %description -n kernel-smp-misc-submount
-Submount - smp-kernel module.
+Submount - SMP kernel module.
 
 %description -n kernel-smp-misc-submount -l pl
-Submount - modu³y kernela smp.
+Submount - modu³ j±dra SMP.
 
 %prep
 %setup -q
 
 %build
+%if %{with kernel}
 cd subfs-%{version}
 for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
 	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
@@ -94,18 +95,20 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 	mv subfs.ko subfs-$cfg.ko
 done
 cd -
+%endif
 
+%if %{with userspace}
 cd submountd-%{version}
 %configure
 %{__make} \
 	CFLAGS="%{rpmcflags}"
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with kernel}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/kernel/fs
-install -d $RPM_BUILD_ROOT{/sbin,%{_mandir}/man8}
-
 cd subfs-%{version}
 install subfs-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/fs/subfs.ko
@@ -114,10 +117,14 @@ install subfs-smp.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/fs/subfs.ko
 %endif
 cd -
+%endif
 
+%if %{with userspace}
+install -d $RPM_BUILD_ROOT{/sbin,%{_mandir}/man8}
 install submountd-%{version}/net-submountd $RPM_BUILD_ROOT/sbin
 install submountd-%{version}/submountd $RPM_BUILD_ROOT/sbin
 install submountd-%{version}/submount.8 $RPM_BUILD_ROOT%{_mandir}/man8
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -134,11 +141,14 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n kernel-smp-misc-submount
 %depmod %{_kernel_ver}smp
 
+%if %{with userspace}
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) /sbin/*
 %{_mandir}/man8/*
+%endif
 
+%if %{with kernel}
 %files -n kernel-misc-submount
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/kernel/fs/subfs.ko*
@@ -147,4 +157,5 @@ rm -rf $RPM_BUILD_ROOT
 %files -n kernel-smp-misc-submount
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/kernel/fs/subfs.ko*
+%endif
 %endif
