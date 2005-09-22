@@ -27,8 +27,8 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Submount is a system for automatically mounting and unmounting
 removable media drives like cdroms and floppy disk drives. It works
 with the Linux 2.6 kernel series. Once installed, it allows removable
-media drives to be accessed as if they were permanently mounted.
-In the opposite to supermount doesn't require patching the kernel.
+media drives to be accessed as if they were permanently mounted. In
+the opposite to supermount doesn't require patching the kernel.
 
 %description -l pl
 Submount jest systemem automatycznego montowania i odmontowywania
@@ -54,7 +54,7 @@ This is a driver for Submount for Linux.
 This package contains Linux module.
 
 %description -n kernel-fs-subfs -l pl
-Sterownik dla Linksa do Submount.
+Sterownik dla Linuksa do Submount.
 
 Ten pakiet zawiera modu³ j±dra Linuksa.
 
@@ -75,7 +75,7 @@ This is a driver for Submount for Linux.
 This package contains Linux SMP module.
 
 %description -n kernel-smp-fs-subfs -l pl
-Sterownik dla Linksa do Submount.
+Sterownik dla Linuksa do Submount.
 
 Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
@@ -158,6 +158,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with userspace}
 %files
 %defattr(644,root,root,755)
+%doc README submountd-%{version}/{AUTHORS,ChangeLog}
 %attr(755,root,root) /sbin/*
 %{_mandir}/man8/*
 %endif
