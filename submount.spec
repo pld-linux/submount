@@ -17,9 +17,10 @@ Group:		Base/Kernel
 Source0:	http://dl.sourceforge.net/submount/%{name}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
 URL:		http://submount.sourceforge.net/
+%if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
 BuildRequires:	rpmbuild(macros) >= 1.217
-Requires:	submount(kernel)
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -36,35 +37,47 @@ Dzia³a z j±drami serii 2.6. Raz zainstalowany, umo¿liwia dostêp do
 wymiennych no¶ników danych tak, jakby by³y one trwale montowane. W
 przeciwieñstwie do supermount nie wymaga ³atania j±dra.
 
-%package -n kernel-misc-submount
+%package -n kernel-fs-subfs
 Summary:	Submount - kernel module
 Summary(pl):	Submount - modu³ j±dra
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{?with_dist_kernel:%requires_releq_kernel_up}
 Requires(post,postun):	/sbin/depmod
-Provides:	submount(kernel)
+%if %{with dist_kernel}
+%requires_releq_kernel_up
+Requires(postun):	%releq_kernel_up
+%endif
 
-%description -n kernel-misc-submount
-Submount - kernel module.
+%description -n kernel-fs-subfs
+This is a driver for Submount for Linux.
 
-%description -n kernel-misc-submount -l pl
-Submount - modu³ j±dra.
+This package contains Linux module.
 
-%package -n kernel-smp-misc-submount
+%description -n kernel-fs-subfs -l pl
+Sterownik dla Linksa do Submount.
+
+Ten pakiet zawiera modu³ j±dra Linuksa.
+
+%package -n kernel-smp-fs-subfs
 Summary:	Submount - SMP kernel module
 Summary(pl):	Submount - modu³ j±dra SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
-%{?with_dist_kernel:%requires_releq_kernel_smp}
 Requires(post,postun):	/sbin/depmod
-Provides:	submount(kernel)
+%if %{with dist_kernel}
+%requires_releq_kernel_smp
+Requires(postun):	%releq_kernel_smp
+%endif
 
-%description -n kernel-smp-misc-submount
-Submount - SMP kernel module.
+%description -n kernel-smp-fs-subfs
+This is a driver for Submount for Linux.
 
-%description -n kernel-smp-misc-submount -l pl
-Submount - modu³ j±dra SMP.
+This package contains Linux SMP module.
+
+%description -n kernel-smp-fs-subfs -l pl
+Sterownik dla Linksa do Submount.
+
+Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
 %prep
 %setup -q
@@ -130,16 +143,16 @@ install submountd-%{version}/submount.8 $RPM_BUILD_ROOT%{_mandir}/man8
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-n kernel-misc-submount
+%post	-n kernel-fs-subfs
 %depmod %{_kernel_ver}
 
-%postun -n kernel-misc-submount
+%postun -n kernel-fs-subfs
 %depmod %{_kernel_ver}
 
-%post	-n kernel-smp-misc-submount
+%post	-n kernel-smp-fs-subfs
 %depmod %{_kernel_ver}smp
 
-%postun -n kernel-smp-misc-submount
+%postun -n kernel-smp-fs-subfs
 %depmod %{_kernel_ver}smp
 
 %if %{with userspace}
@@ -150,12 +163,12 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %if %{with kernel}
-%files -n kernel-misc-submount
+%files -n kernel-fs-subfs
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/kernel/fs/subfs.ko*
 
 %if %{with smp} && %{with dist_kernel}
-%files -n kernel-smp-misc-submount
+%files -n kernel-smp-fs-subfs
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}smp/kernel/fs/subfs.ko*
 %endif
