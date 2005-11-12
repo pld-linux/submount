@@ -10,7 +10,7 @@ Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		submount
 Version:	0.9
-%define		_rel	1
+%define		_rel	2
 Release:	%{_rel}
 License:	GPL v2
 Group:		Base/Kernel
@@ -21,7 +21,15 @@ URL:		http://submount.sourceforge.net/
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
 BuildRequires:	rpmbuild(macros) >= 1.217
 %endif
+%ifarch sparc
+BuildRequires:	crosssparc64-gcc
+%endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%ifarch sparc
+%define		_target_base_arch	sparc64
+%define		_target_base_cpu	sparc64
+%endif
 
 %description
 Submount is a system for automatically mounting and unmounting
@@ -93,7 +101,17 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 	install -d include/{linux,config}
 	ln -sf %{_kernelsrcdir}/config-$cfg .config
 	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h include/linux/autoconf.h
-	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
+%ifarch ppc
+        if [ -d "%{_kernelsrcdir}/include/asm-powerpc" ]; then
+                install -d include/asm
+                cp -a %{_kernelsrcdir}/include/asm-%{_target_base_arch}/* include/asm
+                cp -a %{_kernelsrcdir}/include/asm-powerpc/* include/asm
+        else
+                ln -sf %{_kernelsrcdir}/include/asm-powerpc include/asm
+        fi
+%else
+        ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
+%endif
 	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
 %if %{without dist_kernel}
 	ln -sf %{_kernelsrcdir}/scripts
@@ -104,6 +122,11 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 		M=$PWD O=$PWD \
 		%{?with_verbose:V=1}
 	%{__make} -C %{_kernelsrcdir} modules \
+%if "%{_target_base_arch}" != "%{_arch}"
+		ARCH=%{_target_base_arch} \
+		CROSS_COMPILE=%{_target_base_cpu}-pld-linux- \
+%endif
+		HOSTCC="%{__cc}" \
 		M=$PWD O=$PWD \
 		%{?with_verbose:V=1}
 	mv subfs.ko subfs-$cfg.ko
