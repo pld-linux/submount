@@ -14,7 +14,7 @@ Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		submount
 Version:	0.9
-%define		_rel	3
+%define		_rel	4
 Release:	%{_rel}
 License:	GPL v2
 Group:		Base/Kernel
