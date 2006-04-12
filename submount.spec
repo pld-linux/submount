@@ -10,11 +10,11 @@
 %undefine	with_smp
 %endif
 #
+%define		_rel	6
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		submount
 Version:	0.9
-%define		_rel	6
 Release:	%{_rel}
 License:	GPL v2
 Group:		Base/Kernel
@@ -22,7 +22,7 @@ Source0:	http://dl.sourceforge.net/submount/%{name}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
 URL:		http://submount.sourceforge.net/
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 3:2.6.7}
 BuildRequires:	rpmbuild(macros) >= 1.217
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
