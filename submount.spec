@@ -20,6 +20,7 @@ License:	GPL v2
 Group:		Base/Kernel
 Source0:	http://dl.sourceforge.net/submount/%{name}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
+Patch0:		%{name}-subfs.patch
 URL:		http://submount.sourceforge.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel-module-build >= 3:2.6.7}
@@ -85,6 +86,7 @@ Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %if %{with kernel}
