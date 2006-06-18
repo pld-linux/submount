@@ -1,0 +1,50 @@
+--- submount-0.9/subfs-0.9/subfs.c.orig	2006-06-18 01:48:20.000000000 +0200
++++ submount-0.9/subfs-0.9/subfs.c	2006-06-18 02:32:29.581589750 +0200
+@@ -25,6 +25,7 @@
+ #include <asm/signal.h>
+ #include <linux/signal.h>
+ #include <linux/sched.h>
++#include <linux/version.h>
+ 
+ #include "subfs.h"
+ 
+@@ -188,11 +188,11 @@
+ 	if (&sfs_mnt->mount->mnt_mounts == sfs_mnt->mount->mnt_mounts.next) {
+ 		result = mount_real_fs(sfs_mnt);
+ 		if (result) {
+-			ERR("subfs: submountd execution failure. Error %d\n",
+-			       result);
+ 			/* Workaround for call_usermodehelper return value bug. */
+-			if(result < 0)
++			if(result < 0) {
++				ERR("subfs: submountd execution failure. Error %d\n", result);
+ 				return ERR_PTR(result);
++			}
+ 			return ERR_PTR(-ENOMEDIUM);
+ 		}
+ 		if (&sfs_mnt->mount->mnt_mounts
+@@ -221,6 +222,7 @@
+ 	struct vfsmount *child;
+ 
+ 	/* This is ugly, but prevents a lockup during mount. */
++#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 16)
+ 	up(&dir->i_sem);
+ 	if (down_interruptible(&sfs_mnt->sem)) {
+ 		down(&dir->i_sem);/*put the dir sem back down if interrupted*/
+@@ -229,6 +231,16 @@
+ 	child = get_child_mount(sfs_mnt);
+ 	up(&sfs_mnt->sem);
+ 	down(&dir->i_sem);
++#else
++	mutex_lock(&dir->i_mutex);
++	if (down_interruptible(&sfs_mnt->sem)) {
++		mutex_unlock(&dir->i_mutex);
++		return ERR_PTR(-ERESTARTSYS);
++	}
++	child = get_child_mount(sfs_mnt);
++	up(&sfs_mnt->sem);
++	mutex_unlock(&dir->i_mutex);
++#endif
+ 	if (IS_ERR(child))
+ 		return (void *) child;
+ 	subfs_send_signal();
