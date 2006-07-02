@@ -10,7 +10,7 @@
 %undefine	with_smp
 %endif
 #
-%define		_rel	7
+%define		_rel	8
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		submount
