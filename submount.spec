@@ -17,7 +17,7 @@
 #
 %define		_rel	11
 Summary:	Automatically mounts and unmounts removable media devices
-Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no∂nikÛw danych
+Summary(pl.UTF-8):   Automatyczne montowanie i odmontowywanie wymiennych no≈õnik√≥w danych
 Name:		submount
 Version:	0.9
 Release:	%{_rel}
@@ -40,16 +40,16 @@ with the Linux 2.6 kernel series. Once installed, it allows removable
 media drives to be accessed as if they were permanently mounted. In
 the opposite to supermount doesn't require patching the kernel.
 
-%description -l pl
+%description -l pl.UTF-8
 Submount jest systemem automatycznego montowania i odmontowywania
-wymiennych no∂nikÛw danych, takich jak p≥yty CD-ROM czy dyskietki.
-Dzia≥a z j±drami serii 2.6. Raz zainstalowany, umoøliwia dostÍp do
-wymiennych no∂nikÛw danych tak, jakby by≥y one trwale montowane. W
-przeciwieÒstwie do supermount nie wymaga ≥atania j±dra.
+wymiennych no≈õnik√≥w danych, takich jak p≈Çyty CD-ROM czy dyskietki.
+Dzia≈Ça z jƒÖdrami serii 2.6. Raz zainstalowany, umo≈ºliwia dostƒôp do
+wymiennych no≈õnik√≥w danych tak, jakby by≈Çy one trwale montowane. W
+przeciwie≈Ñstwie do supermount nie wymaga ≈Çatania jƒÖdra.
 
 %package -n kernel%{_alt_kernel}-fs-subfs
 Summary:	Submount - kernel module
-Summary(pl):	Submount - modu≥ j±dra
+Summary(pl.UTF-8):   Submount - modu≈Ç jƒÖdra
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -63,14 +63,14 @@ This is a driver for Submount for Linux.
 
 This package contains Linux module.
 
-%description -n kernel%{_alt_kernel}-fs-subfs -l pl
+%description -n kernel%{_alt_kernel}-fs-subfs -l pl.UTF-8
 Sterownik dla Linuksa do Submount.
 
-Ten pakiet zawiera modu≥ j±dra Linuksa.
+Ten pakiet zawiera modu≈Ç jƒÖdra Linuksa.
 
 %package -n kernel%{_alt_kernel}-smp-fs-subfs
 Summary:	Submount - SMP kernel module
-Summary(pl):	Submount - modu≥ j±dra SMP
+Summary(pl.UTF-8):   Submount - modu≈Ç jƒÖdra SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -84,10 +84,10 @@ This is a driver for Submount for Linux.
 
 This package contains Linux SMP module.
 
-%description -n kernel%{_alt_kernel}-smp-fs-subfs -l pl
+%description -n kernel%{_alt_kernel}-smp-fs-subfs -l pl.UTF-8
 Sterownik dla Linuksa do Submount.
 
-Ten pakiet zawiera modu≥ j±dra Linuksa SMP.
+Ten pakiet zawiera modu≈Ç jƒÖdra Linuksa SMP.
 
 %prep
 %setup -q
