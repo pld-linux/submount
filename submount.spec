@@ -17,7 +17,7 @@
 #
 %define		_rel	11
 Summary:	Automatically mounts and unmounts removable media devices
-Summary(pl.UTF-8):   Automatyczne montowanie i odmontowywanie wymiennych nośników danych
+Summary(pl.UTF-8):	Automatyczne montowanie i odmontowywanie wymiennych nośników danych
 Name:		submount
 Version:	0.9
 Release:	%{_rel}
@@ -49,7 +49,7 @@ przeciwieństwie do supermount nie wymaga łatania jądra.
 
 %package -n kernel%{_alt_kernel}-fs-subfs
 Summary:	Submount - kernel module
-Summary(pl.UTF-8):   Submount - moduł jądra
+Summary(pl.UTF-8):	Submount - moduł jądra
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -70,7 +70,7 @@ Ten pakiet zawiera moduł jądra Linuksa.
 
 %package -n kernel%{_alt_kernel}-smp-fs-subfs
 Summary:	Submount - SMP kernel module
-Summary(pl.UTF-8):   Submount - moduł jądra SMP
+Summary(pl.UTF-8):	Submount - moduł jądra SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
