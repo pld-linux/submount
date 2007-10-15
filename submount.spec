@@ -16,7 +16,7 @@
 %undefine	with_smp
 %endif
 #
-%define		_rel	drbd.spec
+%define		_rel	55
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		submount
