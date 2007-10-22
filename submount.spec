@@ -7,17 +7,19 @@
 %bcond_without	userspace	# don't build userspace utilities
 %bcond_with	verbose		# verbose build (V=1)
 %bcond_with	grsec_kernel	# build for kernel-grsecurity
-#
+
 %ifarch sparc
 %undefine	with_smp
 %endif
-#
+
 %if %{without kernel}
 %undefine	with_dist_kernel
 %endif
-#
 %if %{with kernel} && %{with dist_kernel} && %{with grsec_kernel}
 %define	alt_kernel	grsecurity
+%endif
+%if "%{_alt_kernel}" != "%{nil}"
+%undefine	with_userspace
 %endif
 
 %define		_rel	55
