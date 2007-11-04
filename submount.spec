@@ -103,31 +103,7 @@ Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
 %build
 %if %{with kernel}
-cd subfs-%{version}
-for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
-	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
-		exit 1
-	fi
-        install -d o/include/linux
-        ln -sf %{_kernelsrcdir}/config-$cfg o/.config
-        ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
-        ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
-        %{__make} -j1 -C %{_kernelsrcdir} O=$PWD/o prepare scripts
-	%{__make} -C %{_kernelsrcdir} clean \
-		RCS_FIND_IGNORE="-name '*.ko' -o" \
-		M=$PWD O=$PWD/o \
-		%{?with_verbose:V=1}
-	%{__make} -C %{_kernelsrcdir} modules \
-%if "%{_target_base_arch}" != "%{_arch}"
-		ARCH=%{_target_base_arch} \
-		CROSS_COMPILE=%{_target_base_cpu}-pld-linux- \
-%endif
-		HOSTCC="%{__cc}" \
-		M=$PWD O=$PWD/o \
-		%{?with_verbose:V=1}
-	mv subfs.ko subfs-$cfg.ko
-done
-cd -
+%build_kernel_modules -C subfs-%{version} -m subfs
 %endif
 
 %if %{with userspace}
@@ -141,15 +117,7 @@ cd submountd-%{version}
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with kernel}
-install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/kernel/fs
-cd subfs-%{version}
-install subfs-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/fs/subfs.ko
-%if %{with smp} && %{with dist_kernel}
-install subfs-smp.ko \
-	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/fs/subfs.ko
-%endif
-cd -
+%install_kernel_modules -m subfs-%{version}/subfs -d kernel/fs
 %endif
 
 %if %{with userspace}
