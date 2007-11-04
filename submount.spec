@@ -85,7 +85,7 @@ cd submountd-%{version}
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with kernel}
-%install_kernel_modules -m subfs-%{version}/subfs -d fs
+%install_kernel_modules -m subfs-%{version}/subfs -d kernel/fs
 %endif
 
 %if %{with userspace}
@@ -115,5 +115,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with kernel}
 %files -n kernel%{_alt_kernel}-fs-subfs
 %defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}/fs/subfs.ko*
+/lib/modules/%{_kernel_ver}/kernel/fs/subfs.ko*
 %endif
