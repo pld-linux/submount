@@ -23,16 +23,17 @@
 %endif
 
 %define		_rel	56
+%define		pname	submount
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
-Name:		submount
+Name:		%{pname}%{_alt_kernel}
 Version:	0.9
 Release:	%{_rel}
 License:	GPL v2
 Group:		Base/Kernel
-Source0:	http://dl.sourceforge.net/submount/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/submount/%{pname}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
-Patch0:		%{name}-subfs.patch
+Patch0:		%{pname}-subfs.patch
 URL:		http://submount.sourceforge.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
@@ -97,7 +98,7 @@ Sterownik dla Linuksa do Submount.
 Ten pakiet zawiera modu³ j±dra Linuksa SMP.
 
 %prep
-%setup -q
+%setup -q -n %{pname}-%{version}
 %patch0 -p1
 
 %build
