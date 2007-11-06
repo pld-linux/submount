@@ -22,7 +22,7 @@
 %undefine	with_userspace
 %endif
 
-%define		_rel	56
+%define		_rel	57
 %define		pname	submount
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
