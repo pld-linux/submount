@@ -6,7 +6,6 @@
 %bcond_without	smp		# don't build SMP module
 %bcond_without	userspace	# don't build userspace utilities
 %bcond_with	verbose		# verbose build (V=1)
-%bcond_with	grsec_kernel	# build for kernel-grsecurity
 
 %ifarch sparc
 %undefine	with_smp
@@ -15,20 +14,16 @@
 %if %{without kernel}
 %undefine	with_dist_kernel
 %endif
-%if %{with kernel} && %{with dist_kernel} && %{with grsec_kernel}
-%define	alt_kernel	grsecurity
-%endif
 %if "%{_alt_kernel}" != "%{nil}"
 %undefine	with_userspace
 %endif
 
-%define		_rel	61
 %define		pname	submount
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		%{pname}%{_alt_kernel}
 Version:	0.9
-Release:	%{_rel}
+Release:	62
 License:	GPL v2
 Group:		Base/Kernel
 Source0:	http://dl.sourceforge.net/submount/%{pname}-%{version}.tar.gz
@@ -58,13 +53,9 @@ przeciwieñstwie do supermount nie wymaga ³atania j±dra.
 %package -n kernel%{_alt_kernel}-fs-subfs
 Summary:	Submount - kernel module
 Summary(pl):	Submount - modu³ j±dra
-Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
+%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
 Requires(post,postun):	/sbin/depmod
-%if %{with dist_kernel}
-%requires_releq_kernel_up
-Requires(postun):	%releq_kernel_up
-%endif
 
 %description -n kernel%{_alt_kernel}-fs-subfs
 This is a driver for Submount for Linux.
@@ -79,13 +70,9 @@ Ten pakiet zawiera modu³ j±dra Linuksa.
 %package -n kernel%{_alt_kernel}-smp-fs-subfs
 Summary:	Submount - SMP kernel module
 Summary(pl):	Submount - modu³ j±dra SMP
-Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
+%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}-smp(vermagic) = %{_kernel_ver}}
 Requires(post,postun):	/sbin/depmod
-%if %{with dist_kernel}
-%requires_releq_kernel_smp
-Requires(postun):	%releq_kernel_smp
-%endif
 
 %description -n kernel%{_alt_kernel}-smp-fs-subfs
 This is a driver for Submount for Linux.
