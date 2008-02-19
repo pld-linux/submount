@@ -23,7 +23,7 @@ Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl):	Automatyczne montowanie i odmontowywanie wymiennych no¶ników danych
 Name:		%{pname}%{_alt_kernel}
 Version:	0.9
-Release:	62
+Release:	63
 License:	GPL v2
 Group:		Base/Kernel
 Source0:	http://dl.sourceforge.net/submount/%{pname}-%{version}.tar.gz
