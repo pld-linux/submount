@@ -4,24 +4,35 @@
 %bcond_without	kernel		# don't build kernel modules
 %bcond_without	userspace	# don't build userspace utilities
 %bcond_with	verbose		# verbose build (V=1)
-%bcond_with	grsec_kernel	# build for kernel-grsecurity
-#
-%if %{with kernel} && %{with dist_kernel} && %{with grsec_kernel}
-%define	alt_kernel	grsecurity
+
+%ifarch sparc
+%undefine	with_smp
 %endif
-#
-%define		_rel	11
+
+%if %{without kernel}
+%undefine	with_dist_kernel
+%endif
+%if "%{_alt_kernel}" != "%{nil}"
+%undefine	with_userspace
+%endif
+%if %{without userspace}
+# nothing to be placed to debuginfo package
+%define		_enable_debug_packages	0
+%endif
+
+%define		rel	11
+%define		pname	submount
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl.UTF-8):	Automatyczne montowanie i odmontowywanie wymiennych nośników danych
-Name:		submount
+Name:		%{pname}%{_alt_kernel}
 Version:	0.9
-Release:	%{_rel}
+Release:	%{rel}
 License:	GPL v2
 Group:		Base/Kernel
-Source0:	http://dl.sourceforge.net/submount/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/submount/%{pname}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
-Patch0:		%{name}-subfs.patch
-Patch1:		%{name}-namespace.patch
+Patch0:		%{pname}-subfs.patch
+Patch1:		%{pname}-namespace.patch
 URL:		http://submount.sourceforge.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
@@ -46,7 +57,7 @@ przeciwieństwie do supermount nie wymaga łatania jądra.
 %package -n kernel%{_alt_kernel}-fs-subfs
 Summary:	Submount - kernel module
 Summary(pl.UTF-8):	Submount - moduł jądra
-Release:	%{_rel}@%{_kernel_ver_str}
+Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
 %if %{with dist_kernel}
@@ -65,7 +76,7 @@ Sterownik dla Linuksa do Submount.
 Ten pakiet zawiera moduł jądra Linuksa.
 
 %prep
-%setup -q
+%setup -q -n %{pname}-%{version}
 %patch0 -p1
 %patch1 -p1
 
