@@ -5,10 +5,6 @@
 %bcond_without	userspace	# don't build userspace utilities
 %bcond_with	verbose		# verbose build (V=1)
 
-%ifarch sparc
-%undefine	with_smp
-%endif
-
 %if %{without kernel}
 %undefine	with_dist_kernel
 %endif
