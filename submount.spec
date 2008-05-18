@@ -20,7 +20,7 @@
 %define		_enable_debug_packages	0
 %endif
 
-%define		rel	11
+%define		rel	64
 %define		pname	submount
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl.UTF-8):	Automatyczne montowanie i odmontowywanie wymiennych nośników danych
@@ -59,11 +59,8 @@ Summary:	Submount - kernel module
 Summary(pl.UTF-8):	Submount - moduł jądra
 Release:	%{rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
+%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
 Requires(post,postun):	/sbin/depmod
-%if %{with dist_kernel}
-%requires_releq_kernel
-Requires(postun):	%releq_kernel
-%endif
 
 %description -n kernel%{_alt_kernel}-fs-subfs
 This is a driver for Submount for Linux.
