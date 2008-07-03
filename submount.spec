@@ -2,14 +2,8 @@
 # Conditional build:
 %bcond_without	dist_kernel	# without distribution kernel
 %bcond_without	kernel		# don't build kernel modules
-%bcond_without	up		# don't build UP module
-%bcond_without	smp		# don't build SMP module
 %bcond_without	userspace	# don't build userspace utilities
 %bcond_with	verbose		# verbose build (V=1)
-
-%ifarch sparc
-%undefine	with_smp
-%endif
 
 %if %{without kernel}
 %undefine	with_dist_kernel
@@ -17,22 +11,28 @@
 %if "%{_alt_kernel}" != "%{nil}"
 %undefine	with_userspace
 %endif
+%if %{without userspace}
+# nothing to be placed to debuginfo package
+%define		_enable_debug_packages	0
+%endif
 
+%define		rel		65
 %define		pname	submount
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl.UTF-8):	Automatyczne montowanie i odmontowywanie wymiennych nośników danych
 Name:		%{pname}%{_alt_kernel}
 Version:	0.9
-Release:	63
+Release:	%{rel}
 License:	GPL v2
 Group:		Base/Kernel
 Source0:	http://dl.sourceforge.net/submount/%{pname}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
 Patch0:		%{pname}-subfs.patch
+Patch1:		%{pname}-namespace.patch
 URL:		http://submount.sourceforge.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
-BuildRequires:	rpmbuild(macros) >= 1.308
+BuildRequires:	rpmbuild(macros) >= 1.452
 %endif
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -53,9 +53,11 @@ przeciwieństwie do supermount nie wymaga łatania jądra.
 %package -n kernel%{_alt_kernel}-fs-subfs
 Summary:	Submount - kernel module
 Summary(pl.UTF-8):	Submount - moduł jądra
+Release:	%{rel}@%{_kernel_vermagic}
 Group:		Base/Kernel
-%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
 Requires(post,postun):	/sbin/depmod
+%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}(vermagic) = %{_kernel_ver}}
+Obsoletes:	kernel%{_alt_kernel}-smp-fs-subfs
 
 %description -n kernel%{_alt_kernel}-fs-subfs
 This is a driver for Submount for Linux.
@@ -67,26 +69,10 @@ Sterownik dla Linuksa do Submount.
 
 Ten pakiet zawiera moduł jądra Linuksa.
 
-%package -n kernel%{_alt_kernel}-smp-fs-subfs
-Summary:	Submount - SMP kernel module
-Summary(pl.UTF-8):	Submount - moduł jądra SMP
-Group:		Base/Kernel
-%{?with_dist_kernel:Requires:	kernel%{_alt_kernel}-smp(vermagic) = %{_kernel_ver}}
-Requires(post,postun):	/sbin/depmod
-
-%description -n kernel%{_alt_kernel}-smp-fs-subfs
-This is a driver for Submount for Linux.
-
-This package contains Linux SMP module.
-
-%description -n kernel%{_alt_kernel}-smp-fs-subfs -l pl.UTF-8
-Sterownik dla Linuksa do Submount.
-
-Ten pakiet zawiera moduł jądra Linuksa SMP.
-
 %prep
 %setup -q -n %{pname}-%{version}
 %patch0 -p1
+%patch1 -p1
 
 %build
 %if %{with kernel}
@@ -123,12 +109,6 @@ rm -rf $RPM_BUILD_ROOT
 %postun -n kernel%{_alt_kernel}-fs-subfs
 %depmod %{_kernel_ver}
 
-%post	-n kernel%{_alt_kernel}-smp-fs-subfs
-%depmod %{_kernel_ver}smp
-
-%postun -n kernel%{_alt_kernel}-smp-fs-subfs
-%depmod %{_kernel_ver}smp
-
 %if %{with userspace}
 %files
 %defattr(644,root,root,755)
@@ -138,15 +118,7 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %if %{with kernel}
-%if %{with up} || %{without dist_kernel}
 %files -n kernel%{_alt_kernel}-fs-subfs
 %defattr(644,root,root,755)
 /lib/modules/%{_kernel_ver}/kernel/fs/subfs.ko*
-%endif
-
-%if %{with smp} && %{with dist_kernel}
-%files -n kernel%{_alt_kernel}-smp-fs-subfs
-%defattr(644,root,root,755)
-/lib/modules/%{_kernel_ver}smp/kernel/fs/subfs.ko*
-%endif
 %endif
