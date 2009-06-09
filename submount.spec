@@ -16,7 +16,7 @@
 %define		_enable_debug_packages	0
 %endif
 
-%define		rel	11
+%define		rel	12
 %define		pname	submount
 Summary:	Automatically mounts and unmounts removable media devices
 Summary(pl.UTF-8):	Automatyczne montowanie i odmontowywanie wymiennych nośników danych
@@ -28,7 +28,6 @@ Group:		Base/Kernel
 Source0:	http://dl.sourceforge.net/submount/%{pname}-%{version}.tar.gz
 # Source0-md5:	f6abac328dbfb265eff18561065575c6
 Patch0:		%{pname}-subfs.patch
-Patch1:		%{pname}-namespace.patch
 URL:		http://submount.sourceforge.net/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
@@ -74,7 +73,6 @@ Ten pakiet zawiera moduł jądra Linuksa.
 %prep
 %setup -q -n %{pname}-%{version}
 %patch0 -p1
-%patch1 -p1
 
 %build
 %if %{with kernel}
